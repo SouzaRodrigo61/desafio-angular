@@ -1,0 +1,42 @@
+table {
+  width: 100%;
+}
+
+td, th {
+  width: 25%;
+}
+
+.example-card {
+  height: 15rem;
+  width: 100%;
+}
+
+.card-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+
+  margin-top: 1%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.cep-card {
+  height: 3rem;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-self: flex-end;
+}
+
+
+.table-container {
+  width: 80%;
+
+  margin-top: 1%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
