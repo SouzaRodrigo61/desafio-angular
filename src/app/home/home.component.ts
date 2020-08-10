@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
    * @description Subscreve no cep form para validar se possui alguma mudança e
    *              estiver tudo de acordo vai fazer a chamada da de forma direta
    *              para adicionar o novo CEP a lista.
-   * @author Rodrigo Santos de Souza
+   * @author Rodrigo Santos de Souza 
    */
   onChanges(): void {
 
