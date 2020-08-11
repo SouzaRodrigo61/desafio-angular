@@ -1,35 +1,16 @@
-import { CEP } from './../models/CEP.model';
-import { CepService } from './../services/cep.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import {
-  FormControl,
-  FormGroupDirective,
-  NgForm,
-  Validators,
-} from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { Subscription } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 
-/** Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
+import { CEP } from './../models/CEP.model';
+import { CepService } from './../services/cep.service';
+import { MyErrorStateMatcher } from './../services/my-error-state-matcher.service';
 
 @Component({
   selector: 'app-home',
@@ -37,6 +18,10 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  /**
+   *
+   * @description Variaveis para tabela de CEPs
+   */
   displayedColumns: string[] = [
     'cep',
     'logradouro',
@@ -52,8 +37,11 @@ export class HomeComponent implements OnInit {
 
   columnsToDisplay: string[] = this.displayedColumns.slice();
   dataSource: MatTableDataSource<CEP>;
-  listCEPs: CEP[] = [];
 
+  /**
+   *
+   * @description variaveis de formulario
+   */
   cepFormControl = new FormControl('', [
     Validators.required,
     Validators.minLength(8),
@@ -70,22 +58,31 @@ export class HomeComponent implements OnInit {
 
   cityFilterFormControl = new FormControl('', [Validators.required]);
 
-  cepSubscribe: Subscription;
+  matcher: MyErrorStateMatcher;
 
-  matcher = new MyErrorStateMatcher();
+  /**
+   *
+   * @description Variaves de subscriptions
+   */
+  cepSubscribe: Subscription;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  /**
+   *
+   * @author Rodrigo Santos de Souza
+   * @description Preencher o campo do table source para um array vazio
+   */
   constructor(private serviceCEP: CepService) {
-    // Assign the data to the data source for the table to render
-
     this.dataSource = new MatTableDataSource([]);
   }
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    this.matcher = new MyErrorStateMatcher();
 
     this.onChanges();
     this.onChangeCEP();
@@ -95,10 +92,10 @@ export class HomeComponent implements OnInit {
 
   /**
    *
+   * @author Rodrigo Santos de Souza
    * @description Subscreve no cep form para validar se possui alguma mudança e
    *              estiver tudo de acordo vai fazer a chamada da de forma direta
    *              para adicionar o novo CEP a lista.
-   * @author Rodrigo Santos de Souza
    */
   onChanges(): void {
     this.cepFormControl.valueChanges.subscribe((val: string) => {
@@ -110,12 +107,10 @@ export class HomeComponent implements OnInit {
              * Valida se o cep ja existe na listagem
              */
             if (
-              !this.listCEPs.find((obj) => obj.cep === response.cep) ||
+              !this.dataSource.data.find((obj) => obj.cep === response.cep) ||
               response !== null
             ) {
-              this.listCEPs.push(response);
-              this.dataSource = new MatTableDataSource(this.listCEPs);
-              
+              this.dataSource.data = [...this.dataSource.data, response];
             }
 
             this.cepFormControl.setValue(null);
@@ -128,6 +123,13 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   * @author Rodrigo Santos de Souza
+   * @description Se tiver alteração no formulario de filtro de cep
+   *              fazer uma filtragem na tabela pelas cidades mapeadas
+   *              no array de CEPs
+   */
   onChangeCEP() {
     this.cepFilterFormControl.valueChanges.subscribe((val) => {
       this.dataSource.filter = val;
@@ -137,6 +139,13 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   * @author Rodrigo Santos de Souza
+   * @description Se tiver alteração no formulario de filtro de uf
+   *              fazer uma filtragem na tabela pelas cidades mapeadas
+   *              no array de CEPs
+   */
   onChangeUF() {
     this.UFFilterFormControl.valueChanges.subscribe((val) => {
       this.dataSource.filter = val;
@@ -146,6 +155,13 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   * @author Rodrigo Santos de Souza
+   * @description Se tiver alteração no formulario de filtro de cidade
+   *              fazer uma filtragem na tabela pelas cidades mapeadas
+   *              no array de CEPs
+   */
   onChangeCity() {
     this.cityFilterFormControl.valueChanges.subscribe((val) => {
       this.dataSource.filter = val;
@@ -155,10 +171,25 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  handleClick(event: Event) {
-    console.log('limpar ', event);
+  /**
+   *
+   * @author Rodrigo Santos de Souza
+   * @description Limpar todos os campos de filtragem
+   */
+  handleClick() {
     this.cepFilterFormControl.setValue(null);
     this.UFFilterFormControl.setValue(null);
     this.cityFilterFormControl.setValue(null);
+  }
+
+  /**
+   *
+   * @param row Cep
+   * @author Rodrigo Santos de Souza
+   * @description Remover todos os campos da lista de CEPs
+   */
+  handleRemove(row: CEP): void {
+    const data = this.dataSource.data.filter((obj) => obj.cep !== row.cep);
+    this.dataSource.data = [...data];
   }
 }
