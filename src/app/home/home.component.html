@@ -8,10 +8,22 @@
       <span matPrefix>Informe um CEP a ser adicionados &nbsp;</span>
       <mat-form-field class="example-full-width">
         <mat-label>CEP</mat-label>
-        <input matInput [formControl]="cepFormControl" [errorStateMatcher]="matcher" placeholder="72140000">
+        <input
+          matInput
+          [dropSpecialCharacters]="false"
+          mask="00.000-000"
+          [formControl]="cepFormControl"
+          [errorStateMatcher]="matcher"
+          placeholder="72140000"
+        />
         <mat-hint>Preencha o CEP!</mat-hint>
         <mat-error
-          *ngIf="cepFormControl.hasError('minlength') || cepFormControl.hasError('maxlength') && !cepFormControl.hasError('required')">
+          *ngIf="
+            cepFormControl.hasError('minlength') ||
+            (cepFormControl.hasError('maxlength') &&
+              !cepFormControl.hasError('required'))
+          "
+        >
           Preencha no formato correto do CEP
         </mat-error>
         <mat-error *ngIf="cepFormControl.hasError('required')">
@@ -39,90 +51,95 @@
       <form>
         <mat-form-field>
           <mat-label>CEP</mat-label>
-          <input matInput [formControl]="cepFilterFormControl">
+          <input
+            matInput
+            [dropSpecialCharacters]="false"
+            mask="00.000-000"
+            [formControl]="cepFilterFormControl"
+          />
         </mat-form-field>
         &nbsp;
 
         <mat-form-field>
           <mat-label>UF</mat-label>
-          <input matInput [formControl]="UFFilterFormControl">
+          <input matInput [formControl]="UFFilterFormControl" />
         </mat-form-field>
         &nbsp;
 
         <mat-form-field>
           <mat-label>Cidade</mat-label>
-          <input matInput [formControl]="cityFilterFormControl">
+          <input matInput [formControl]="cityFilterFormControl" />
         </mat-form-field>
 
         <mat-action-row>
-          <button mat-button color="primary" (click)="handleClick()">Limpar</button>
+          <button mat-button color="primary" (click)="handleClick()">
+            Limpar
+          </button>
         </mat-action-row>
       </form>
     </mat-expansion-panel>
-
   </mat-accordion>
 </div>
 
 <div class="card-container">
-  <table mat-table [dataSource]="dataSource ">
-
+  <table mat-table [dataSource]="dataSource">
     <!-- CEP Column -->
     <ng-container matColumnDef="cep">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> CEP </th>
-      <td mat-cell *matCellDef="let row"> {{row.cep}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>CEP</th>
+      <td mat-cell *matCellDef="let row">{{ row.cep }}</td>
     </ng-container>
 
     <!-- Logradouro Column -->
     <ng-container matColumnDef="logradouro">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Logradouro </th>
-      <td mat-cell *matCellDef="let row"> {{row.logradouro}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Logradouro</th>
+      <td mat-cell *matCellDef="let row">{{ row.logradouro }}</td>
     </ng-container>
 
     <!-- Complemento Column -->
     <ng-container matColumnDef="complemento">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Complemento </th>
-      <td mat-cell *matCellDef="let row"> {{row.complemento}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Complemento</th>
+      <td mat-cell *matCellDef="let row">{{ row.complemento }}</td>
     </ng-container>
 
     <!-- Bairro Column -->
     <ng-container matColumnDef="bairro">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Bairro </th>
-      <td mat-cell *matCellDef="let row"> {{row.bairro}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Bairro</th>
+      <td mat-cell *matCellDef="let row">{{ row.bairro }}</td>
     </ng-container>
 
     <!-- localidade Column -->
     <ng-container matColumnDef="localidade">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Localidade </th>
-      <td mat-cell *matCellDef="let row"> {{row.localidade}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Localidade</th>
+      <td mat-cell *matCellDef="let row">{{ row.localidade }}</td>
     </ng-container>
 
     <!-- uf Column -->
     <ng-container matColumnDef="uf">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> uf </th>
-      <td mat-cell *matCellDef="let row"> {{row.uf}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>uf</th>
+      <td mat-cell *matCellDef="let row">{{ row.uf }}</td>
     </ng-container>
 
     <!-- unidade Column -->
     <ng-container matColumnDef="unidade">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Unidade </th>
-      <td mat-cell *matCellDef="let row"> {{row.unidade}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Unidade</th>
+      <td mat-cell *matCellDef="let row">{{ row.unidade }}</td>
     </ng-container>
 
     <!-- ibge Column -->
     <ng-container matColumnDef="ibge">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> ibge </th>
-      <td mat-cell *matCellDef="let row"> {{row.ibge}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ibge</th>
+      <td mat-cell *matCellDef="let row">{{ row.ibge }}</td>
     </ng-container>
 
     <!-- gia Column -->
     <ng-container matColumnDef="gia">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> gia </th>
-      <td mat-cell *matCellDef="let row"> {{row.gia}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>gia</th>
+      <td mat-cell *matCellDef="let row">{{ row.gia }}</td>
     </ng-container>
 
     <!-- Açao Column -->
     <ng-container matColumnDef="Acao">
-      <th mat-header-cell *matHeaderCellDef> Açao </th>
+      <th mat-header-cell *matHeaderCellDef>Açao</th>
       <td mat-cell *matCellDef="let row">
         <button mat-button color="primary" (click)="handleRemove(row)">
           <mat-icon>delete</mat-icon>
@@ -130,13 +147,12 @@
       </td>
     </ng-container>
 
-
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-    <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
 
     <!-- Row shown when there is no matching data. -->
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="10">Não tem CEPs encontrados </td>
+      <td class="mat-cell" colspan="10">Não tem CEPs encontrados</td>
     </tr>
   </table>
 

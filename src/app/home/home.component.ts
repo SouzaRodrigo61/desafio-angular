@@ -44,14 +44,14 @@ export class HomeComponent implements OnInit {
    */
   cepFormControl = new FormControl('', [
     Validators.required,
-    Validators.minLength(8),
-    Validators.maxLength(8),
+    Validators.minLength(10),
+    Validators.maxLength(10),
   ]);
 
   cepFilterFormControl = new FormControl('', [
     Validators.required,
-    Validators.minLength(8),
-    Validators.maxLength(8),
+    Validators.minLength(10),
+    Validators.maxLength(10),
   ]);
 
   UFFilterFormControl = new FormControl('', [Validators.required]);
@@ -100,6 +100,9 @@ export class HomeComponent implements OnInit {
   onChanges(): void {
     this.cepFormControl.valueChanges.subscribe((val: string) => {
       if (val !== null && val !== '' && this.cepFormControl.errors === null) {
+        val = val.replace('.', '');
+        val = val.replace('-', '');
+
         this.cepSubscribe = this.serviceCEP.getDataOfCEP(val).subscribe(
           (response: CEP) => {
             /**
@@ -132,6 +135,7 @@ export class HomeComponent implements OnInit {
    */
   onChangeCEP() {
     this.cepFilterFormControl.valueChanges.subscribe((val) => {
+      val = val.replace('.', '');
       this.dataSource.filter = val;
       if (this.dataSource.paginator) {
         this.dataSource.paginator.firstPage();

@@ -21,6 +21,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 
+import { NgxMaskModule } from 'ngx-mask';
+
 @NgModule({
   declarations: [AppComponent, HomeComponent],
   imports: [
@@ -41,6 +43,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatButtonModule,
     MatTooltipModule,
     MatExpansionModule,
+    NgxMaskModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
